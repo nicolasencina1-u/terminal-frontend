@@ -65,59 +65,94 @@ const modelStats = (
     const factorBloque = bloqueData?.ocupacionPromedio && metrics.ocupacion?.promedio ?
         bloqueData.ocupacionPromedio / metrics.ocupacion.promedio : 0;
 
-    const factorMovimientos = (factorBloque / bloquesActivos) || 0;
-    
     const isWeekly = !currentTurno || currentTurno === 0;
 
-    // CÃ¡lculo de movimientos totales (movTotal) y yard (yardTotal)
-    let movTotal = 0;
-    let yardTotal = 0;
+    // Inicializamos totales
+    let recepcion = 0;
+    let carga = 0;
+    let descarga = 0;
+    let entrega = 0;
+    let yard = 0;
+    let total = 0;
+
+    if (isWeekly && bloqueData) {
+        // VISTA SEMANAL: Usar datos PRE-AGREGADOS directamente del backend
+        const m = isReferenceHistorical ? (bloqueData as any).movimientosReal : (bloqueData as any).movimientos;
+        if (m) {
+            return {
+                ocupacion: (isReferenceHistorical ? (bloqueData as any).ocupacionReal : bloqueData.ocupacionPromedio) || 0,
+                recepcion: m.recepcion || 0,
+                carga: m.carga || 0,
+                descarga: m.descarga || 0,
+                entrega: m.entrega || 0,
+                gate: (m.recepcion || 0) + (m.entrega || 0),
+                muelle: (m.carga || 0) + (m.descarga || 0),
+                total: m.total || 0,
+                yard: (m as any).yard || 0,
+                bloqueData
+            };
+        }
+    }
 
     if (metrics.evolucionTemporal && metrics.evolucionTemporal.length > 0) {
         if (isWeekly) {
-            // VISTA SEMANAL: Sumar TODOS los turnos (usualmente 21)
+            // VISTA SEMANAL FALLBACK: Sumar TODOS los turnos (usualmente 21)
             metrics.evolucionTemporal.forEach(turno => {
-                movTotal += isReferenceHistorical ? (turno.movimientosReal || 0) : (turno.movimientosModelo || 0);
-                yardTotal += isReferenceHistorical ? (turno.movimientosYard || 0) : 0;
+                if (isReferenceHistorical && turno.detalleBloquesReal?.[bloqueId]) {
+                    const d = turno.detalleBloquesReal[bloqueId];
+                    recepcion += d.recepcion; carga += d.carga; descarga += d.descarga; entrega += d.entrega; yard += d.yard; total += d.total;
+                } else if (!isReferenceHistorical && turno.detalleBloques?.[bloqueId]) {
+                    const d = turno.detalleBloques[bloqueId];
+                    recepcion += d.recepcion; carga += d.carga; descarga += d.descarga; entrega += d.entrega; total += d.total;
+                } else {
+                    const movTurno = isReferenceHistorical ? (turno.movimientosReal || 0) : (turno.movimientosModelo || 0);
+                    const yardTurno = isReferenceHistorical ? (turno.movimientosYard || 0) : 0;
+                    const multiplier = factorBloque || (1 / bloquesActivos);
+                    recepcion += Math.round(movTurno * 0.45 * multiplier);
+                    carga += Math.round(movTurno * 0.25 * multiplier);
+                    descarga += Math.round(movTurno * 0.15 * multiplier);
+                    entrega += Math.round(movTurno * 0.15 * multiplier);
+                    yard += Math.round(yardTurno * multiplier);
+                    total += Math.round(movTurno * multiplier);
+                }
             });
         } else if (currentTurno && currentTurno > 0 && metrics.evolucionTemporal.length >= currentTurno) {
             // VISTA POR TURNO
             const turno = metrics.evolucionTemporal[currentTurno - 1];
-            movTotal = isReferenceHistorical ? (turno.movimientosReal || 0) : (turno.movimientosModelo || 0);
-            yardTotal = isReferenceHistorical ? (turno.movimientosYard || 0) : 0;
+            if (isReferenceHistorical && turno.detalleBloquesReal?.[bloqueId]) {
+                const d = turno.detalleBloquesReal[bloqueId];
+                recepcion = d.recepcion; carga = d.carga; descarga = d.descarga; entrega = d.entrega; yard = d.yard; total = d.total;
+            } else if (!isReferenceHistorical && turno.detalleBloques?.[bloqueId]) {
+                const d = turno.detalleBloques[bloqueId];
+                recepcion = d.recepcion; carga = d.carga; descarga = d.descarga; entrega = d.entrega; total = d.total;
+            } else {
+                const movTurno = isReferenceHistorical ? (turno.movimientosReal || 0) : (turno.movimientosModelo || 0);
+                const yardTurno = isReferenceHistorical ? (turno.movimientosYard || 0) : 0;
+                const multiplier = factorBloque || (1 / bloquesActivos);
+                recepcion = Math.round(movTurno * 0.45 * multiplier);
+                carga = Math.round(movTurno * 0.25 * multiplier);
+                descarga = Math.round(movTurno * 0.15 * multiplier);
+                entrega = Math.round(movTurno * 0.15 * multiplier);
+                yard = Math.round(yardTurno * multiplier);
+                total = Math.round(movTurno * multiplier);
+            }
         }
-    } else {
-        // Fallback a los totales generales
-        movTotal = isReferenceHistorical ? (metrics.movimientos?.totalReal || 0) : 
-                   (metrics.movimientos?.optimizados || 0);
-        yardTotal = isReferenceHistorical ? (metrics.movimientos?.yardEliminados || 0) : 0;
     }
 
-    // DistribuciÃ³n por tipo (estimada si no viene del backend por bloque)
-    const opt = isReferenceHistorical ? 
-        { 
-            recepcion: movTotal * 0.45, 
-            carga: movTotal * 0.25, 
-            descarga: movTotal * 0.15, 
-            entrega: movTotal * 0.15 
-        } : 
-        {
-            recepcion: movTotal * 0.45,
-            carga: movTotal * 0.25,
-            descarga: movTotal * 0.15,
-            entrega: movTotal * 0.15
-        };
+    // Ocupación final con ground-truth real
+    const ocupacionFinal = isWeekly 
+        ? (isReferenceHistorical ? (bloqueData as any).ocupacionReal : bloqueData?.ocupacionPromedio)
+        : (isReferenceHistorical 
+            ? (metrics.evolucionTemporal?.[currentTurno - 1]?.detalleOcupacionReal?.[bloqueId] || metrics.evolucionTemporal?.[currentTurno - 1]?.ocupacionPromedioReal)
+            : (metrics.evolucionTemporal?.[currentTurno - 1]?.ocupacionPromedio || 0) * factorBloque
+        );
 
-    // Aplicamos el factor del bloque al total (sin distribuir por nÃºmero de bloques para mantener consistencia con vista turno)
-    const multiplier = factorBloque || 1;
-    
     return {
-        ocupacion: (isWeekly ? (bloqueData?.ocupacionPromedio || 0) : ((metrics.evolucionTemporal?.[currentTurno - 1]?.ocupacionPromedio || 0) * factorBloque)),
-        gate: Math.round((opt.recepcion + opt.entrega) * multiplier),
-        muelle: Math.round((opt.carga + opt.descarga) * multiplier),
-        total: Math.round(movTotal * multiplier),
-        yard: Math.round(yardTotal * multiplier),
-        bloqueData
+        ocupacion: ocupacionFinal || 0,
+        recepcion, carga, descarga, entrega,
+        gate: recepcion + entrega,
+        muelle: carga + descarga,
+        total, yard, bloqueData
     };
 }
 
@@ -246,10 +281,10 @@ export const getOptimizationModelDataForBlock = (
         }
 
         const datosHistoricos: OptimizationModelBlockData['historico'] = {
-            gateEntradas: Math.round(statsRef.gate * 0.4),
-            gateSalidas: Math.round(statsRef.gate * 0.6),
-            muelleEntradas: Math.round(statsRef.muelle * 0.5),
-            muelleSalidas: Math.round(statsRef.muelle * 0.5),
+            gateEntradas: statsRef.recepcion,
+            gateSalidas: statsRef.entrega,
+            muelleEntradas: statsRef.descarga,
+            muelleSalidas: statsRef.carga,
             totalMovimientos: Math.round(statsRef.total),
             yardMovimientos: Math.round(statsRef.yard),
             despejosBloques: Math.round(statsRef.yard * 0.65),
@@ -270,9 +305,6 @@ export const getOptimizationModelDataForBlock = (
             comparedAgainst: comparisonType
         };
 
-        // Extraer movimientos detallados si vienen del backend
-        const m = (bloqueData as any)?.movimientos;
-
         return {
             segregaciones: Math.round((optimizationMetrics.segregaciones?.activas?.length || 0) / 9),
             ocupacionPromedio: bloqueData?.ocupacionPromedio || 0,
@@ -285,10 +317,10 @@ export const getOptimizationModelDataForBlock = (
             cargaMaxima: Math.round(optimizationMetrics.cargaTrabajo?.maxima || 0),
             cargaMinima: Math.round(optimizationMetrics.cargaTrabajo?.minima || 0),
             variacionCarga: Math.round((optimizationMetrics.cargaTrabajo?.maxima || 0) - (optimizationMetrics.cargaTrabajo?.minima || 0)),
-            movimientosRecepcion: m ? m.recepcion : Math.round(statsA.gate * 0.4),
-            movimientosCarga: m ? m.carga : Math.round(statsA.muelle * 0.6),
-            movimientosDescarga: m ? m.descarga : Math.round(statsA.muelle * 0.4),
-            movimientosEntrega: m ? m.entrega : Math.round(statsA.gate * 0.6),
+            movimientosRecepcion: statsA.recepcion,
+            movimientosCarga: statsA.carga,
+            movimientosDescarga: statsA.descarga,
+            movimientosEntrega: statsA.entrega,
             movimientosTotales: statsA.total,
             segregacionesCodigos: [],
             segregacionesDetalle: [],

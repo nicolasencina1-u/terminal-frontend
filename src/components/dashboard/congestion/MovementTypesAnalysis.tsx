@@ -286,7 +286,7 @@ export const MovementTypesAnalysis: React.FC<MovementTypesAnalysisProps> = ({
         return processedData.map(item => {
             const filtered: any = {
                 label: item.label,
-                hour: item.hour // Preservar hora original si existe
+                hour: item.hour
             };
 
             // Aplicar filtro por tipo de movimiento
@@ -543,7 +543,7 @@ export const MovementTypesAnalysis: React.FC<MovementTypesAnalysisProps> = ({
                                 />
                                 <Legend />
 
-                                {/* Movimientos Productivos - CAMBIO: type="linear" */}
+                                {/* Movimientos Productivos */}
                                 {filterProductivos.entradaGate && (
                                     <Area type="linear" dataKey="entradaGate" stackId="1"
                                         stroke="#10b981" fill="#10b981" fillOpacity={0.8} name="Entrada Gate"
@@ -565,7 +565,7 @@ export const MovementTypesAnalysis: React.FC<MovementTypesAnalysisProps> = ({
                                         connectNulls={false} />
                                 )}
 
-                                {/* Movimientos No Productivos - CAMBIO: type="linear" */}
+                                {/* Movimientos No Productivos */}
                                 {filterNoProductivos.remanejosBloque && (
                                     <Area type="linear" dataKey="reacomodosBloque" stackId="1"
                                         stroke="#f59e0b" fill="#f59e0b" fillOpacity={0.8} name="Reacomodos en bloque"
@@ -646,7 +646,6 @@ export const MovementTypesAnalysis: React.FC<MovementTypesAnalysisProps> = ({
                 </div>
             )}
 
-            {/* Nueva visualización de evolución por turnos con 3 curvas */}
             {showEvolucionTurnos && timeState.unit === 'week' && evolucionPorTurnosData.length > 0 && (
                 <div className="space-y-4">
                     <div className="bg-slate-700 rounded-lg p-4">
@@ -682,7 +681,7 @@ export const MovementTypesAnalysis: React.FC<MovementTypesAnalysisProps> = ({
                                         formatter={(value: any) => `${value} movimientos`}
                                     />
                                     <Legend />
-                                    {/* CAMBIO: type="linear" para evitar suavizado excesivo */}
+                                    {/* */}
                                     <Line
                                         type="linear"
                                         dataKey="turno1"

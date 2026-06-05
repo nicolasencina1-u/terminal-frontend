@@ -233,7 +233,7 @@ export const RealComparisonPanel: React.FC = () => {
                 ))}
             </div>
 
-            {/* Movement Type Comparison - CORREGIDO */}
+            {/* Movement Type Comparison */}
             <div className="bg-slate-800 rounded-lg border border-slate-700 p-4">
                 <h3 className="font-medium text-slate-50 mb-4 flex items-center">
                     <Activity size={16} className="mr-2 text-blue-400" />

@@ -1,4 +1,4 @@
-// src/hooks/usePortKPIs.ts - COMPLETO Y CORREGIDO
+// src/hooks/usePortKPIs.ts
 import { useCallback, useMemo } from 'react';
 import { useSharedPortData } from './useSharedPortData';
 import { useViewNavigation } from '../contexts/ViewNavigationContext';
@@ -238,7 +238,6 @@ export const usePortKPIs = (options?: UsePortKPIsOptions): UsePortKPIsReturn => 
         }
     }, [sharedData.kpis]);
 
-    // Función getStatusForKPI CORREGIDA para manejar correctamente Balance y TTT
     const getStatusForKPI = useCallback((kpiName: NumericKPIs): KPIStatus => {
         if (!sharedData.kpis) return 'normal';
 

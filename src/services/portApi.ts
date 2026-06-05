@@ -19,7 +19,6 @@ export interface KPIFilters {
     operationType?: 'import' | 'export';
 }
 
-// Interfaz actualizada con los campos de totales
 interface ComprehensiveKPIResponse {
     capacidad: {
         utilizacionPorVolumen: number;
@@ -46,7 +45,6 @@ interface ComprehensiveKPIResponse {
         movimientosGateHora: number;
         movimientosPatioHora: number;
         movimientosMuelleHora: number;
-        // NUEVOS CAMPOS DE TOTALES
         totalMovimientosGate: number;
         totalMovimientosPatio: number;
         totalMovimientosMuelle: number;
@@ -163,7 +161,6 @@ class PortApiService {
                 maximosTeus: item.maximosTeus,
                 promedioContenedores: item.promedioContenedores,
                 promedioTeus: item.promedioTeus,
-                // NUEVOS CAMPOS MAPEADOS - Despejos y Bahías
                 despejosBloques: item.despejosBloques || 0,
                 despejosPatios: item.despejosPatios || 0,
                 bahias: item.bahias || 0,
@@ -272,7 +269,6 @@ class PortApiService {
                 movimientosPatioHora: data.flujos.movimientosPatioHora,
                 movimientosMuelleHora: data.flujos.movimientosMuelleHora,
 
-                // NUEVOS CAMPOS - Totales de movimientos
                 totalMovimientosGate: totalMovimientosGate,
                 totalMovimientosPatio: totalMovimientosPatio,
                 totalMovimientosMuelle: totalMovimientosMuelle,
@@ -292,7 +288,6 @@ class PortApiService {
                 // Relaciones KPI
                 kpiRelations: {
                     ...data.kpiRelations,
-                    // Calcular nuevas relaciones si no vienen del backend
                     tiempoServicioUtilizacionStatus: this.calcularRelacionTiempoUtilizacion(
                         data.tiemposServicio.cdt.promedioDias,
                         data.capacidad.utilizacionPorVolumen
@@ -309,7 +304,6 @@ class PortApiService {
         }
     }
 
-    // Métodos auxiliares para calcular nuevas relaciones
     private calcularRelacionTiempoUtilizacion(
         cdtDias: number,
         utilizacion: number

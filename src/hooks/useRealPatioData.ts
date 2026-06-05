@@ -54,7 +54,6 @@ export const useRealPatioData = () => {
         const movimientosPorBloque = new Map<string, number>();
         const ocupacionPorBloque = new Map<string, number>();
 
-        // NUEVO: Agrupar TODOS los movimientos por bloque para sumarlos
         const movimientosAgrupadosPorBloque = new Map<string, any[]>();
 
         sharedData.movements.forEach(mov => {
@@ -101,7 +100,6 @@ export const useRealPatioData = () => {
             else if (bloqueId.startsWith('I')) patioId = 'imo';
             else if (bloqueId.startsWith('E')) patioId = 'espingon';
 
-            // CAMBIO: Sumar TODOS los movimientos del bloque
             const todosLosMovimientos = movimientosAgrupadosPorBloque.get(bloqueId) || [];
 
             console.log(`🔍 DEBUG - Bloque ${bloqueId}: ${todosLosMovimientos.length} registros`);

@@ -36,7 +36,6 @@ export interface PortMovementData {
     bahiasReefer: number;       // Bahías con refrigeración
 }
 
-// Nuevas interfaces para CDT y TTT
 export interface ContainerDwellTime {
     promedioHoras: number;
     promedioDias: number;
@@ -59,24 +58,23 @@ export interface TruckTurnaroundTime {
     totalCamiones: number;
 }
 
-// KPIs fundamentales del terminal - ACTUALIZADO CON CDT Y TTT
+// KPIs fundamentales del terminal
 export interface CorePortKPIs {
-    // 1. UTILIZACIÓN POR VOLUMEN (mejorado con promedio pre-calculado)
+    // 1. UTILIZACIÓN POR VOLUMEN
     utilizacionPorVolumen: number;
-    promedioTeus: number; // Nuevo campo para el valor pre-calculado
+    promedioTeus: number;
     capacidadTotal: number; // Capacidad del terminal
     utilizacionPorBloque: Record<string, number>;
     utilizacionPorPatio: Record<string, number>;
 
-    // 2. FLUJO PROMEDIO EN GATES (antes Congestión Vehicular)
-    flujoPromedioGates: number; // Renombrado
+    // 2. FLUJO PROMEDIO EN GATES
+    flujoPromedioGates: number;
     gateThroughput: number; // Gate entrada + salida / horas
 
     // 3. BALANCE DE FLUJO ENTRADA/SALIDA
     balanceFlujo: number;
     totalEntradas: number;
     totalSalidas: number;
-    // AGREGAR los totales
     totalMovimientosGate?: number;
     totalMovimientosPatio?: number;
     totalMovimientosMuelle?: number;
@@ -87,17 +85,17 @@ export interface CorePortKPIs {
     indiceRemanejo: number;
     totalRemanejos: number;
 
-    // 6. VARIABILIDAD OPERACIONAL (reemplaza Saturación Operacional)
+    // 6. VARIABILIDAD OPERACIONAL
     variabilidadOperacional: number; // Coeficiente de variación
     rangoOperativo: number; // Máximo - Mínimo TEUs
     minimoTeus: number;
     maximoTeus: number;
     horasCriticas: number; // Horas > 85% capacidad
 
-    // 7. TIEMPO DE PERMANENCIA (CDT) - NUEVO
+    // 7. TIEMPO DE PERMANENCIA (CDT)
     tiempoPermanencia: ContainerDwellTime;
 
-    // 8. TIEMPO DE CAMIONES (TTT) - NUEVO
+    // 8. TIEMPO DE CAMIONES (TTT)
     tiempoCamiones: TruckTurnaroundTime;
 
     // Datos auxiliares
@@ -114,18 +112,17 @@ export interface CorePortKPIs {
     labelMovimientos2?: string;
     labelMovimientos3?: string;
     vistaContexto?: 'terminal' | 'patio' | 'bloque';
-    // ANÁLISIS DE RELACIONES ENTRE KPIs (actualizado)
+    // ANÁLISIS DE RELACIONES ENTRE KPIs
     kpiRelations?: {
         congestionProductividadStatus: 'good' | 'normal' | 'warning' | 'critical';
         utilizacionRemanejosStatus: 'good' | 'normal' | 'warning' | 'critical';
         balanceUtilizacionStatus: 'good' | 'normal' | 'warning' | 'critical';
-        // Nuevas relaciones con tiempos de servicio
         tiempoServicioUtilizacionStatus: 'good' | 'normal' | 'warning' | 'critical';
         tiempoServicioFlujoStatus: 'good' | 'normal' | 'warning' | 'critical';
     };
 }
 
-// KPIs numéricos que pueden tener deltas (actualizado)
+// KPIs numéricos que pueden tener deltas
 export type NumericKPIs =
     | 'utilizacionPorVolumen'
     | 'flujoPromedioGates'
@@ -142,7 +139,7 @@ export type NumericKPIs =
 // Estados de los KPIs
 export type KPIStatus = 'good' | 'warning' | 'critical' | 'normal';
 
-// Umbrales para cada KPI (actualizado)
+// Umbrales para cada KPI
 export interface KPIThreshold {
     warning: number;
     critical: number;
@@ -159,7 +156,7 @@ export const CAPACIDADES_BLOQUES: Record<string, number> = {
     'T1': 714, 'T2': 714, 'T3': 714, 'T4': 714
 };
 
-// Capacidad total del terminal (actualizada según documentación)
+// Capacidad total del terminal
 export const CAPACIDAD_TOTAL_TERMINAL = 16254; // Suma real de capacidades
 
 // Configuración de patios
@@ -169,14 +166,14 @@ export const PATIO_BLOCKS = {
     tebas: ['T1', 'T2', 'T3', 'T4']
 };
 
-// Capacidades por patio (actualizadas)
+// Capacidades por patio
 export const CAPACIDAD_POR_PATIO = {
     costanera: 9072,  // 9 bloques × 1008
     ohiggins: 4316,   // H1-H4: 866×4 + H5: 1050
     tebas: 2856       // 4 bloques × 714
 };
 
-// Descripciones de KPIs (actualizadas)
+// Descripciones de KPIs
 export const KPI_DESCRIPTIONS: Record<string, string> = {
     utilizacionPorVolumen: 'Porcentaje de TEUs almacenados respecto a la capacidad máxima',
     flujoPromedioGates: 'Contenedores procesados por hora en gates del terminal',
@@ -188,7 +185,7 @@ export const KPI_DESCRIPTIONS: Record<string, string> = {
     tiempoCamiones: 'Tiempo promedio de camiones en el terminal'
 };
 
-// Notas y limitaciones de KPIs (actualizadas)
+// Notas y limitaciones de KPIs
 export const KPI_NOTES: Record<string, string> = {
     utilizacionPorVolumen: 'Basado en promedio de TEUs del período vs capacidad total',
     flujoPromedioGates: 'Suma de entradas y salidas por gates dividido por horas activas',
@@ -200,7 +197,7 @@ export const KPI_NOTES: Record<string, string> = {
     tiempoCamiones: 'Objetivo: < 90 minutos para operación eficiente'
 };
 
-// Unidades de medida (actualizadas)
+// Unidades de medida
 export const KPI_UNITS: Record<string, string> = {
     utilizacionPorVolumen: '%',
     flujoPromedioGates: 'cont/h',
@@ -251,10 +248,6 @@ export interface KPICardProps {
     subtitle?: string;
     showInfoIcon?: boolean;
 }
-
-
-
-// src/types/congestion.ts
 
 export interface CongestionData {
     bloque: string;

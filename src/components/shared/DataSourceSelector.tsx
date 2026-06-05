@@ -9,7 +9,7 @@ import ModelConfigSelector from '../camila/selectors/ModelConfigSelector';
 export const DataSourceSelector: React.FC = () => {
     const { timeState, setDataSource, setCamilaConfig, isLoadingData } = useTimeContext();
     
-    // Obtenemos los controladores del nuevo Contexto de Modelos
+    // Obtenemos los controladores del Contexto de Modelos
     const { setActiveModel, updateConfig } = useOptimizationModelContext();
 
     useEffect(() => {

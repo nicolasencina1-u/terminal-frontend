@@ -1,4 +1,4 @@
-// src/components/map/PortMapLegend.tsx - VERSIÓN COMPACTA
+// src/components/map/PortMapLegend.tsx
 import React from 'react';
 
 export const PortMapLegend: React.FC = () => {

@@ -118,6 +118,22 @@ export interface OptimizationMetrics {
             ocupacionMinima: number;
             teusPromedio?: number;
             utilizacion?: number;
+            movimientos?: {
+                recepcion: number;
+                carga: number;
+                descarga: number;
+                entrega: number;
+                total: number;
+            };
+            movimientosReal?: {
+                recepcion: number;
+                carga: number;
+                descarga: number;
+                entrega: number;
+                yard: number;
+                total: number;
+            };
+            ocupacionReal?: number;
         }>;
     };
 
@@ -246,8 +262,25 @@ export interface MetricaTemporal {
     movimientosModelo: number;
     cargaTrabajo: number;
     ocupacionPromedio: number;
+    ocupacionPromedioReal?: number;
     distanciaReal?: number;
     distanciaModelo?: number;
+    detalleBloques?: Record<string, {
+        recepcion: number;
+        carga: number;
+        descarga: number;
+        entrega: number;
+        total: number;
+    }>;
+    detalleBloquesReal?: Record<string, {
+        recepcion: number;
+        carga: number;
+        descarga: number;
+        entrega: number;
+        yard: number;
+        total: number;
+    }>;
+    detalleOcupacionReal?: Record<string, number>;
 }
 
 export interface KPIComparativo {

@@ -194,7 +194,6 @@ export const KPICard: React.FC<KPICardProps> = ({
             className={`rounded-lg border p-4 h-full flex flex-col ${getStatusColor()} relative group transition-transform hover:scale-[1.02]`}
             title={tooltip}
         >
-            {/* Tooltip mejorado */}
             {tooltip && (
                 <div className="absolute bottom-full left-0 mb-2 p-3 bg-slate-900 text-white text-xs rounded
                                opacity-0 group-hover:opacity-100 transition-opacity duration-200

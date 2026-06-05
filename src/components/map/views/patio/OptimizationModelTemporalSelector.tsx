@@ -1,4 +1,4 @@
-// src/components/map/views/patio/OptimizationModelTemporalSelector.tsx - VERSIÓN COMPACTA
+// src/components/map/views/patio/OptimizationModelTemporalSelector.tsx
 import React from 'react';
 import { Clock, Calendar, ChevronLeft, ChevronRight, BarChart3 } from 'lucide-react';
 

@@ -16,14 +16,13 @@ const api = axios.create({
     },
 });
 
-// Función mejorada para mapear la respuesta del dashboard
 const mapDashboardResponse = (data: any): OptimizationMetrics => {
     console.log('📊 Mapeando respuesta del dashboard:', data);
 
     // Extraer movimientos del detalle si existe
     const detalleMovimientos = data.kpis_principales?.movimientos?.detalle || {};
 
-    // Calcular movimientos operativos correctamente
+    // Calcular movimientos operativos
     const movimientosOperativosReal = data.kpis_principales?.movimientos?.operativos_real ||
         (detalleMovimientos.dlvr_real + detalleMovimientos.load_real + data.kpis_principales?.movimientos?.yard_eliminados) || 0;
 
@@ -41,7 +40,7 @@ const mapDashboardResponse = (data: any): OptimizationMetrics => {
         fechaInicio: data.metadata?.fecha_inicio || new Date().toISOString(),
         fechaFin: data.metadata?.fecha_fin || new Date().toISOString(),
 
-        // KPIs principales con valores correctos del backend
+        // KPIs principales con valores del backend
         eficiencia: {
             real: data.kpis_principales?.eficiencia?.real || 0,
             optimizada: data.kpis_principales?.eficiencia?.optimizada || 100,
@@ -51,7 +50,7 @@ const mapDashboardResponse = (data: any): OptimizationMetrics => {
         // Metadata completa
         metadata: data.metadata,
 
-        // Movimientos con estructura correcta
+        // Movimientos con estructura
         movimientos: {
             totalReal: data.kpis_principales?.movimientos?.total_real || movimientosOperativosReal,
             yardEliminados: data.kpis_principales?.movimientos?.yard_eliminados || 0,
@@ -73,7 +72,7 @@ const mapDashboardResponse = (data: any): OptimizationMetrics => {
             }
         },
 
-        // Distancias correctas del backend
+        // Distancias del backend
         distancias: {
             totalReal: data.kpis_principales?.distancias?.total_real || 0,
             totalModelo: data.kpis_principales?.distancias?.total_modelo || 0,
@@ -110,11 +109,14 @@ const mapDashboardResponse = (data: any): OptimizationMetrics => {
                 ocupacionMaxima: bloque.ocupacion_maxima,
                 ocupacionMinima: bloque.ocupacion_minima,
                 teusPromedio: bloque.teus_promedio,
-                utilizacion: bloque.utilizacion
+                utilizacion: bloque.utilizacion,
+                movimientos: bloque.movimientos,
+                movimientosReal: bloque.movimientos_real,
+                ocupacionReal: bloque.ocupacion_real
             })) || []
         },
 
-        // Carga de trabajo con valores correctos
+        // Carga de trabajo con valores
         cargaTrabajo: {
             total: data.kpis_principales?.carga_trabajo?.total || 0,
             variacion: data.kpis_principales?.carga_trabajo?.variacion || 0,
@@ -123,7 +125,7 @@ const mapDashboardResponse = (data: any): OptimizationMetrics => {
             minima: data.kpis_principales?.carga_trabajo?.minima || 0
         },
 
-        // Evolución temporal con campos correctos
+        // Evolución temporal con campos
         evolucionTemporal: data.evolucion_temporal?.map((item: any) => ({
             periodo: item.periodo,
             dia: item.dia,
@@ -132,10 +134,14 @@ const mapDashboardResponse = (data: any): OptimizationMetrics => {
             movimientosYard: item.movimientos_yard,
             movimientosModelo: item.movimientos_modelo,
             cargaTrabajo: item.carga_trabajo || 0,
-            ocupacionPromedio: item.ocupacion_promedio
+            ocupacionPromedio: item.ocupacion_promedio,
+            ocupacionPromedioReal: item.ocupacion_promedio_real,
+            detalleBloques: item.detalle_bloques,
+            detalleBloquesReal: item.detalle_bloques_real,
+            detalleOcupacionReal: item.detalle_ocupacion_real
         })) || [],
 
-        // Comparación resumen correcta
+        // Comparación resumen
         comparacionResumen: {
             eliminacionReubicaciones: {
                 valor: data.comparacion_resumen?.eliminacion_reubicaciones?.valor || 0,
@@ -165,7 +171,6 @@ const mapDashboardResponse = (data: any): OptimizationMetrics => {
     return validateMetrics(mapped);
 };
 
-// Función de validación mejorada
 const validateMetrics = (metrics: OptimizationMetrics): OptimizationMetrics => {
     // Validaciones básicas
     if (metrics.eficiencia.ganancia > 0 && metrics.distancias.distanciaAhorrada === 0) {

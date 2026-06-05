@@ -1,5 +1,5 @@
 # terminal-frontend
-1- Ejecutar 'docker compose up --build frontend-dev'.
+1- Ejecutar `docker compose up --build frontend-dev`.
 
 
 ---

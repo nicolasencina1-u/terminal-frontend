@@ -195,14 +195,12 @@ export const useOptimizationData = (
                 throw new Error(`Periodo ${periodo} fuera de rango (1-21)`);
             }
 
-            // Ahora sí, obtener el detalle del bloque
             const data = await optimizationApi.getBlockOccupation(
                 bloqueId,
                 instanciaId,
                 periodo
             );
 
-            // El backend ya devuelve la estructura correcta
             setBloqueDetalle(data);
 
             // Guardar en cache

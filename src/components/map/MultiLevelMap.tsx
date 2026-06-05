@@ -90,7 +90,7 @@ export const MultiLevelMap: React.FC<MultiLevelMapProps> = ({
         </div>
       )}
 
-      {/* Contenedor del mapa - CAMBIO CLAVE: overflow-y-auto */}
+      {/* Contenedor del mapa */}
       <div
         className={`flex-1 overflow-y-auto transition-all duration-300 ease-in-out ${zoomTransition ? 'scale-95 opacity-30' : 'scale-100 opacity-100'
           }`}

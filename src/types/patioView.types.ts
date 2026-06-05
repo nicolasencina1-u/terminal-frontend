@@ -134,7 +134,6 @@ export interface OptimizationModelBlockData {
     movimientos: number;
     capacidad: number;
 
-    // Nuevas métricas
     cargaTrabajo: number;
     cargaMaxima: number;
     cargaMinima: number;

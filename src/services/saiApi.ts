@@ -54,10 +54,7 @@ class SAIApiService {
     private baseUrl = import.meta.env.VITE_API_URL
         ? `${import.meta.env.VITE_API_URL}/api/v1/sai`
         : 'http://localhost:8000/api/v1/sai';
-    /**
-     * Obtener posiciones de contenedores para un bloque específico
-     * USANDO EL ENDPOINT CORRECTO DE SAI
-     */
+        
     async getBlockPositions(
         bloque: string,
         turno: number | undefined,

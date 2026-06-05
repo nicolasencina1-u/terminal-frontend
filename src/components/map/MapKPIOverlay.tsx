@@ -151,7 +151,6 @@ export const MapKPIOverlay: React.FC<MapKPIOverlayProps> = ({
         return showTotal ? `${value.toLocaleString()} mov` : `${Math.round(value)} mov/h`;
     };
 
-    // Función para obtener descripción contextual mejorada
     const getKPIContext = (kpiName: string) => {
         switch (kpiName) {
             case 'movimientosGate':
@@ -350,7 +349,7 @@ export const MapKPIOverlay: React.FC<MapKPIOverlayProps> = ({
                         </div>
                     </div>
 
-                    {/* 6. Balance - CORREGIDO */}
+                    {/* 6. Balance */}
                     <div className={`rounded-lg p-2 border ${getStatusBg('balanceFlujo')} hover:scale-105 transition-transform cursor-help`}>
                         <div className="flex flex-col">
                             <RefreshCw className="w-4 h-4 text-yellow-400 mb-1" />

@@ -1,4 +1,4 @@
-// src/hooks/useSharedPortData.ts - VERSIÓN FINAL CORREGIDA
+// src/hooks/useSharedPortData.ts
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTimeContext } from '../contexts/TimeContext';
 import { useViewNavigation } from '../contexts/ViewNavigationContext';
@@ -172,7 +172,6 @@ export const useSharedPortData = () => {
                 unit: timeState.unit === 'shift' ? 'hour' : timeState.unit
             };
 
-            // LÓGICA CORRECTA DE FILTRADO:
             if (viewState.level === 'bloque' && viewState.selectedBloque) {
                 // VISTA BLOQUE: Solo enviar bloque_filter, NO patio_filter
                 filters.bloqueFilter = viewState.selectedBloque;

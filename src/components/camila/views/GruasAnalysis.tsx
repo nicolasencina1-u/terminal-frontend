@@ -386,7 +386,6 @@ const GruasAnalysis: React.FC<Props> = ({ data }) => {
                                                                     >
                                                                         G{asig.grua}
                                                                     </span>
-                                                                    {/* Tooltip mejorado */}
                                                                     <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20">
                                                                         <div className="bg-slate-900 text-white text-xs rounded-lg py-2 px-3 whitespace-nowrap border border-slate-700 shadow-lg">
                                                                             <div className="font-semibold border-b border-slate-700 pb-1 mb-1">

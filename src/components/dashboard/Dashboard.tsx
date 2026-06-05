@@ -246,7 +246,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
     if (gateFlow < 30 || ttt > 90) gateStatus = 'warning';
     if (gateFlow < 20 || ttt > 120) gateStatus = 'critical';
 
-    // Patios: basado en movimientos internos (menos es mejor)
+    // Patios: basado en movimientos internos
     const patioMov = currentKPIs.movimientosPatioHora || 0;
     let patioStatus = 'good';
     if (patioMov > 50) patioStatus = 'warning';

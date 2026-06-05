@@ -118,7 +118,6 @@ export const usePortData = () => {
   };
 
   return {
-    // Datos originales
     ocupacionData,
     productividadData,
     tiempoCamionData,

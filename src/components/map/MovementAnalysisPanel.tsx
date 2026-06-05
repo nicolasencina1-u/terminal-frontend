@@ -171,11 +171,10 @@ export const MovementAnalysisPanel: React.FC = () => {
                     data = Array.from(hourlyData.entries())
                         .map(([hour, values]) => ({
                             label: adjustTimeForDisplay(hour),
-                            hour: hour, // Mantener hora original para cálculos
+                            hour: hour,
                             ...values
                         }));
 
-                    // CAMBIO: Agregar puntos de corte para evitar interpolación incorrecta
                     // Agregar punto antes del inicio del turno 1 (6am) con valores en 0
                     if (data.length > 0 && data[5].hour === 5) {
                         // Si hay datos a las 5am y no hay actividad, asegurar que sea 0
@@ -410,7 +409,7 @@ export const MovementAnalysisPanel: React.FC = () => {
         const filtered = processedData.map(item => {
             const filtered: any = {
                 label: item.label,
-                hour: item.hour // Preservar hora original
+                hour: item.hour
             };
 
             if (filterTipoMovimiento === 'productivos') {
@@ -449,7 +448,7 @@ export const MovementAnalysisPanel: React.FC = () => {
 
         return filtered;
     }, [processedData, filterProductivos, filterNoProductivos, filterTipoMovimiento]);
-    // Nueva lógica para evolución por turnos con 3 curvas
+    
     const evolucionPorTurnosData = useMemo(() => {
         if (timeState.unit !== 'week' || !historicalData || historicalData.length === 0) return [];
 
@@ -759,7 +758,7 @@ export const MovementAnalysisPanel: React.FC = () => {
                                     />
                                     <Legend />
 
-                                    {/* Movimientos Productivos - CAMBIO: type="linear" para evitar suavizado */}
+                                    {/* Movimientos Productivos */}
                                     {filterProductivos.entradaGate && (
                                         <Area type="linear" dataKey="entradaGate" stackId="1"
                                             stroke="#10b981" fill="#10b981" fillOpacity={0.8} name="Entrada Gate"
@@ -781,7 +780,7 @@ export const MovementAnalysisPanel: React.FC = () => {
                                             connectNulls={false} />
                                     )}
 
-                                    {/* Movimientos No Productivos - CAMBIO: type="linear" */}
+                                    {/* Movimientos No Productivos */}
                                     {filterNoProductivos.reacomodosBloque && (
                                         <Area type="linear" dataKey="reacomodosBloque" stackId="1"
                                             stroke="#f59e0b" fill="#f59e0b" fillOpacity={0.8} name="Reacomodos en bloque"
@@ -862,7 +861,6 @@ export const MovementAnalysisPanel: React.FC = () => {
                     </div>
                 )}
 
-                {/* Nueva visualización de evolución por turnos - CAMBIO: type="linear" */}
                 {showEvolucionTurnos && timeState.unit === 'week' && evolucionPorTurnosData.length > 0 && (
                     <div className="space-y-4">
                         <div className="bg-slate-700 rounded-lg p-4">
@@ -898,7 +896,7 @@ export const MovementAnalysisPanel: React.FC = () => {
                                             formatter={(value: any) => `${value} movimientos`}
                                         />
                                         <Legend />
-                                        {/* CAMBIO: type="linear" para evitar suavizado excesivo */}
+                                        {/*  */}
                                         <Line
                                             type="linear"
                                             dataKey="turno1"

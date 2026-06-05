@@ -188,7 +188,6 @@ export const WorkloadChart: React.FC = () => {
             inventarioDataPorDia.push(...inventariosDia);
         }
 
-        // Estadísticas corregidas
         const movimientos = timelineData.map((d: any) => d.movimientosModelo).filter((v: number) => v > 0);
         const totalWorkload = movimientos.reduce((sum: number, val: number) => sum + val, 0);
         const avgWorkload = movimientos.length > 0 ? totalWorkload / movimientos.length : 0;
@@ -410,7 +409,6 @@ export const WorkloadChart: React.FC = () => {
                 </div>
             </div>
 
-            {/* Panel informativo actualizado */}
             <div className="bg-cyan-950/30 rounded-lg p-4 border border-cyan-700">
                 <div className="flex items-start">
                     <Info size={20} className="text-cyan-400 mr-3 mt-0.5" />
